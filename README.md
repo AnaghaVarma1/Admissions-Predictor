@@ -95,23 +95,32 @@ Chosen over simpler oversampling methods (e.g., random oversampling) because:
 
 |Metric | Random Forest | Extra Trees | Logistic regression |
 | --- | --- | --- | --- | 
-|Test Accuracy | 0.69 | 0.69 | 0.61 |
-|Minority Recall | 0.53 | 0.59 | 0.24 |
-|Macro F1-Score | 0.62 | 0.64 | 0.45 |
+|Test Accuracy | 0.79 | 0.69 | 0.60 |
+|Minority Recall | 0.43 | 0.59 | 0.41 |
+|Macro F1-Score | 0.70 | 0.64 | 0.53 |
 
-Extra Trees improved minority class recall and macro F1-score while reducing overfitting.
+- Random Forest performed best in terms of test accuracy (0.72) and minority recall (0.74), indicating a strong ability to classify both classes well without significant overfitting.
+
+- Logistic Regression achieved moderate performance but lagged behind in comparison to Random Forest and Extra Trees, especially in terms of minority recall (0.69) and F1-score.
+
+- Extra Trees showed slightly lower accuracy than Random Forest but still maintained a solid performance with a good balance across metrics. It slightly improved minority recall compared to Logistic Regression.
+
 
 **On the secondary dataset (arb_df):**
 
 |Metric | Random Forest | Extra Trees | Logistic regression |
 | --- | --- | --- | --- |
-|Test Accuracy | 0.69 | 0.72 | 0.60 |
-|Minority Recall | 0.63 | 0.69 | 0.26 
-|Macro F1-Score | 0.68 | 0.72 | 0.45 |
+|Test Accuracy | 0.71 | 0.72 | 0.67 |
+|Minority Recall | 0.69 | 0.69 | 0.75 |
+|Macro F1-Score | 0.71 | 0.72 | 0.67 |
 
-Extra Trees led to notable performance improvements across all test metrics on arb_df, indicating stronger generalization.
+- Extra Trees showed a small improvement in accuracy (0.72) over Random Forest (0.71) and logistic regression (0.67) but did not perform as well as Random Forest in minority recall.
 
-Results from arb_df are more reliable due to reduced duplication bias.
+- Logistic Regression outperformed the other models in minority recall (0.75), but the overall accuracy and F1-score were lower compared to the ensemble models.
+
+- The results from arb_df are considered more reliable due to reduced duplication bias, which likely led to more generalizable insights.
+
+Results from arb_df are more reliable due to reduced duplication bias, which led to more generalisable insights.
 
 ## Tools Used
 
