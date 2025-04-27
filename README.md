@@ -1,42 +1,130 @@
 # Admissions-Predictor
+
 Predicting Cambridge Admissions Using LinkedIn and QS Rankings 
 
 ## Overview
-This project builds a machine learning pipeline to predict Cambridge admission outcomes based on applicant background data.
-It addresses challenges of small sample size, class imbalance, and feature noise through careful preprocessing and model tuning.
 
-### Dataset
-Features: Uni Class, 2025 Rank, leader_months, data_months
+This project explores whether it’s possible to predict Cambridge admission outcomes for professionals in data-related fields, using only information typically found on a LinkedIn profile. It examines how factors such as university background, time spent in data roles, and leadership experience influence the likelihood of receiving an offer.
 
-Target: Cambridge? (1 = admitted, 0 = not admitted)
+This work is submitted as part of my MPhil in Data Intensive Science application.
 
-### Methodology
-Train/Test Split before any resampling to prevent leakage.
+## Dataset
 
-SMOTE applied inside cross-validation to balance classes.
+Source: Publicly available data on university admissions (modified for project use).
 
-### Models
+Features:
 
-Logistic Regression (baseline)
+- Uni Class: Classification of undergraduate university
 
-Random Forest (tuned)
+- 2025 Rank: QS world ranking of undergraduate university
 
-Extra Trees (tuned, better handling of noise)
+- leader_months: Duration of leadership roles (in months)
 
-Hyperparameter Tuning with GridSearchCV.
+- data_months: Duration of data-related experience (in months)
 
-### Key Results
+Target:
 
-| Dataset | Model | Accuracy | Minority Recall | Macro F1-Score|
-| --- | --- | --- | --- | --- |
-| dup_df | Random Forest | 0.69 | 0.53 | 0.62|
-| dup_df | Extra Trees | 0.69 | 0.59 | 0.64|
-| arb_df | Random Forest | 0.69 | 0.63 | 0.68|
-| arb_df | Extra Trees | 0.72 | 0.69 | 0.72|
+- Cambridge?: Binary indicator (1 = admitted, 0 = not admitted)
 
+Note: Minor data cleaning and feature engineering were performed.
 
-Extra Trees improved recall and F1-scores without overfitting.
+As a result of the nature of the Uni Class feature, two datasets were generated:
+
+- dup_df: Original dataset containing duplicate university entries for some applicants.
+
+- arb_df: A cleaned version where one entry per applicant was selected arbitrarily to avoid duplication bias.
+
+## Key Challenges
+
+Class imbalance: Significantly more rejected applicants than admitted ones.
+
+Small dataset: Risk of overfitting without careful model handling.
+
+Potential feature noise: Features like QS rank may introduce variance.
+
+## Approach
+
+1. Data Splitting
+
+- Hold-out test set reserved before any model fitting.
+
+- Training data further split via cross-validation.
+
+2. Preprocessing
+
+- Oversampling of the minority class (admitted) using SMOTE to balance classes.
+
+- SMOTE applied inside cross-validation folds to avoid data leakage.
+
+3. Baseline Modeling
+
+- Logistic Regression: Chosen for interpretability and strong baseline benchmarking.
+
+4. Model Development
+
+- Random Forest Classifier: Tuned using grid search.
+
+- Extra Trees Classifier: Explored to better handle small data and noisy features.
+
+5. Evaluation Metrics
+
+- Accuracy
+
+- Precision, Recall, F1-score (macro-averaged)
+
+- Training vs. cross-validation performance (to monitor overfitting)
+
+### Why SMOTE?
+
+Chosen over simpler oversampling (e.g., random oversampling) because:
+
+- Generates synthetic examples rather than duplicating minority instances.
+
+- Reduces overfitting risk compared to random oversampling.
+
+- Better generalization on unseen data, especially critical with small datasets.
+
+## Results
+
+On the primary dataset (dup_df):
+
+|Metric | Random Forest | Extra Trees | Logistic regression |
+| --- | --- | --- | --- | 
+|Test Accuracy | 0.69 | 0.69 | 0.61 |
+|Minority Recall | 0.53 | 0.59 | 0.24 |
+|Macro F1-Score | 0.62 | 0.64 | 0.45 |
+
+Extra Trees improved minority class recall and macro F1-score while reducing overfitting.
+
+On the secondary dataset (arb_df):
+
+|Metric | Random Forest | Extra Trees | Logistic regression |
+| --- | --- | --- | --- |
+|Test Accuracy | 0.69 | 0.72 | 0.60 |
+|Minority Recall | 0.63 | 0.69 | 0.26 
+|Macro F1-Score | 0.68 | 0.72 | 0.45 |
+
+Extra Trees led to notable performance improvements across all test metrics on arb_df, indicating stronger generalization.
+
+Results from arb_df are more reliable due to reduced duplication bias.
+
+## Tools Used
+
+- Python 3
  
-### Tools
-Python (scikit-learn, imbalanced-learn, pandas, numpy)
+- Jupyter Notebook
+ 
+- scikit-learn (Logistic Regression, Random Forest, Extra Trees)
+ 
+- imbalanced-learn (SMOTE)
+ 
+- pandas, numpy (data manipulation)
+ 
+- matplotlib, seaborn (visualizations)
+ 
+## Conclusion
+
+This project successfully explored the potential of predicting Cambridge admission outcomes for professionals in data-related fields, using only information typically found on a LinkedIn profile. By applying various machine learning models to small, imbalanced datasets, the approach effectively balanced class distribution through resampling techniques like SMOTE. Among the models tested, Extra Trees showed the best performance, improving both recall and F1 scores without overfitting.
+
+While the models demonstrate promising predictive power, the results also underscore the need for continued refinement, particularly in handling feature noise and enhancing model generalization. The findings suggest that, with further data and fine-tuning, such a model could offer valuable insights for admissions prediction in highly competitive fields like data science. This work provides a foundation for future research into scalable, transparent AI applications for educational outcomes.
 
