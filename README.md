@@ -10,7 +10,11 @@ This work is submitted as part of my MPhil in Data Intensive Science application
 
 ## Dataset
 
-Source: Publicly available data on university admissions (modified for project use).
+Source: 
+
+- LinkedIn: Modified publicly available code to scrape through LinkedIn profiles
+
+- QS dataset: Publicly available data from the QS World University Rankings 2025 report
 
 Features:
 
@@ -26,7 +30,8 @@ Target:
 
 - Cambridge?: Binary indicator (1 = admitted, 0 = not admitted)
 
-Note: Minor data cleaning and feature engineering were performed.
+
+Minor data cleaning and feature engineering were performed.
 
 As a result of the nature of the Uni Class feature, two datasets were generated:
 
@@ -36,47 +41,47 @@ As a result of the nature of the Uni Class feature, two datasets were generated:
 
 ## Key Challenges
 
-Class imbalance: Significantly more rejected applicants than admitted ones.
+1. Class imbalance: Significantly more rejected applicants than admitted ones.
 
-Small dataset: Risk of overfitting without careful model handling.
+2. Small dataset: Risk of overfitting without careful model handling.
 
-Potential feature noise: Features like QS rank may introduce variance.
+3. Potential feature noise: Features like QS rank may introduce variance.
 
 ## Approach
 
 1. Data Splitting
 
-- Hold-out test set reserved before any model fitting.
-
-- Training data further split via cross-validation.
-
+    - Hold-out test set reserved before any model fitting.
+    
+    - Training data further split via cross-validation.
+    
 2. Preprocessing
 
-- Oversampling of the minority class (admitted) using SMOTE to balance classes.
-
-- SMOTE applied inside cross-validation folds to avoid data leakage.
+    - Oversampling of the minority class (admitted) using SMOTE to balance classes.
+    
+    - SMOTE applied inside cross-validation folds to avoid data leakage.
 
 3. Baseline Modeling
 
-- Logistic Regression: Chosen for interpretability and strong baseline benchmarking.
+    - Logistic Regression: Chosen for interpretability and strong baseline benchmarking.
 
 4. Model Development
 
-- Random Forest Classifier: Tuned using grid search.
-
-- Extra Trees Classifier: Explored to better handle small data and noisy features.
+    - Random Forest Classifier: Tuned using grid search.
+    
+    - Extra Trees Classifier: Explored to better handle small data and noisy features.
 
 5. Evaluation Metrics
 
-- Accuracy
-
-- Precision, Recall, F1-score (macro-averaged)
-
-- Training vs. cross-validation performance (to monitor overfitting)
+    - Accuracy
+    
+    - Precision, Recall, F1-score (macro-averaged)
+    
+    - Training vs. cross-validation performance (to monitor overfitting)
 
 ### Why SMOTE?
 
-Chosen over simpler oversampling (e.g., random oversampling) because:
+Chosen over simpler oversampling methods (e.g., random oversampling) because:
 
 - Generates synthetic examples rather than duplicating minority instances.
 
@@ -86,7 +91,7 @@ Chosen over simpler oversampling (e.g., random oversampling) because:
 
 ## Results
 
-On the primary dataset (dup_df):
+**On the primary dataset (dup_df):**
 
 |Metric | Random Forest | Extra Trees | Logistic regression |
 | --- | --- | --- | --- | 
@@ -96,7 +101,7 @@ On the primary dataset (dup_df):
 
 Extra Trees improved minority class recall and macro F1-score while reducing overfitting.
 
-On the secondary dataset (arb_df):
+**On the secondary dataset (arb_df):**
 
 |Metric | Random Forest | Extra Trees | Logistic regression |
 | --- | --- | --- | --- |
