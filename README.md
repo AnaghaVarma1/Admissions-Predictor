@@ -27,7 +27,7 @@ Hyperparameter Tuning with GridSearchCV.
 
 ### Key Results
 
-| DatasetModel | Accuracy | Minority Recall | Macro F1-Score|
+| Dataset | Model | Accuracy | Minority Recall | Macro F1-Score|
 | --- | --- | --- | --- |
 | dup_df | Random Forest | 0.69 | 0.53 | 0.62|
 | dup_df | Extra Trees | 0.69 | 0.59 | 0.64|
@@ -35,7 +35,7 @@ Hyperparameter Tuning with GridSearchCV.
 | arb_df | Extra Trees | 0.72 | 0.69 | 0.72|
 
 
-Extra Trees improved recall and F1-scores without overfitting.|
+Extra Trees improved recall and F1-scores without overfitting.
  
 ### Tools
 Python (scikit-learn, imbalanced-learn, pandas, numpy)
