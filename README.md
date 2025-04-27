@@ -28,7 +28,7 @@ Hyperparameter Tuning with GridSearchCV.
 ### Key Results
 
 | Dataset | Model | Accuracy | Minority Recall | Macro F1-Score|
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | dup_df | Random Forest | 0.69 | 0.53 | 0.62|
 | dup_df | Extra Trees | 0.69 | 0.59 | 0.64|
 | arb_df | Random Forest | 0.69 | 0.63 | 0.68|
