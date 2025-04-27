@@ -1,0 +1,31 @@
+Accuracy:0.7900552486187845
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.81      0.93      0.86       130
+           1       0.71      0.43      0.54        51
+
+    accuracy                           0.79       181
+   macro avg       0.76      0.68      0.70       181
+weighted avg       0.78      0.79      0.77       181
+ 
+
+Training accuracy:0.7978
+
+Cross validation accuracy:0.7452
+
+Checking for data leakage:
+0
+
+Correlation matrix:
+Cambridge?       1.000000
+Uni Class        0.256029
+leader_months    0.116310
+data_months     -0.013512
+2025 Rank       -0.185088
+Name: Cambridge?, dtype: float64
+
+Feature Importance:
+{'2025 Rank': 0.1017, 'Uni Class': 0.0541, 'leader_months': 0.0425, 'data_months': 0.0077}
+
