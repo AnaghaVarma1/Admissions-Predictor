@@ -12,9 +12,11 @@ This work is submitted as part of my MPhil in Data Intensive Science application
 
 Source: 
 
-- LinkedIn: Modified publicly available code to scrape through LinkedIn profiles
+- LinkedIn: Modified publicly available code to scrape through LinkedIn profiles 
 
 - QS dataset: Publicly available data from the QS World University Rankings 2025 report
+
+*Please navigate to the src folder and open 'LinkedIn scraping.ipynb' to learn more about the generation of the admissions dataset*
 
 Features:
 
@@ -121,6 +123,8 @@ Chosen over simpler oversampling methods (e.g., random oversampling) because:
 - The results from arb_df are considered more reliable due to reduced duplication bias, which likely led to more generalizable insights.
 
 Results from arb_df are more reliable due to reduced duplication bias, which led to more generalisable insights.
+
+*Please navigate to the model outputs folder located within the src folder to learn more*
 
 ## Tools Used
 
