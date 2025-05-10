@@ -1,0 +1,18 @@
+Dataset: duplication
+Model: XGBoost
+Best Params: {'clf__max_depth': None, 'clf__n_estimators': 200}
+Accuracy: 0.7569
+ROC-AUC: 0.7057
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.84      0.82      0.83       130
+           1       0.57      0.59      0.58        51
+
+    accuracy                           0.76       181
+   macro avg       0.70      0.71      0.70       181
+weighted avg       0.76      0.76      0.76       181
+
+Confusion Matrix:
+[[107  23]
+ [ 21  30]]

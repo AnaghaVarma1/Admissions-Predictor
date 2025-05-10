@@ -1,0 +1,18 @@
+Dataset: arbitrary
+Model: ExtraTrees
+Best Params: {'clf__max_depth': None, 'clf__n_estimators': 200}
+Accuracy: 0.6441
+ROC-AUC: 0.6390
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.68      0.68      0.68        66
+           1       0.60      0.60      0.60        52
+
+    accuracy                           0.64       118
+   macro avg       0.64      0.64      0.64       118
+weighted avg       0.64      0.64      0.64       118
+
+Confusion Matrix:
+[[45 21]
+ [21 31]]

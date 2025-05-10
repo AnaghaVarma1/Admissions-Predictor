@@ -1,0 +1,18 @@
+Dataset: duplication
+Model: RandomForest
+Best Params: {'clf__max_depth': None, 'clf__n_estimators': 200}
+Accuracy: 0.7514
+ROC-AUC: 0.6661
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.81      0.86      0.83       130
+           1       0.57      0.47      0.52        51
+
+    accuracy                           0.75       181
+   macro avg       0.69      0.67      0.67       181
+weighted avg       0.74      0.75      0.74       181
+
+Confusion Matrix:
+[[112  18]
+ [ 27  24]]
