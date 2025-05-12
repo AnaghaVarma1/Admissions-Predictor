@@ -92,7 +92,7 @@ On closer analysis of our SHAP summary plots we learn:
 
 - High SQL emphasis surprisingly decreases predicted Cambridge likelihood, hinting at a deeper career‐stage or skill‐focus distinction between research‐oriented applicants and seasoned industry specialists.
 
-> _Full tables, plots, and detailed outputs are in the `src/model_outputs/` and `results/` folders._
+> _Full tables, plots, and detailed outputs can be found in the `src/results/` folder._
 
 
 ## Conclusion
