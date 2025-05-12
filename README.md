@@ -1,148 +1,101 @@
 # Admissions-Predictor
 
-Predicting Cambridge Admissions Using LinkedIn and QS Rankings 
+### Exploring Career Patterns and Institutional Influence in Data Science
 
 ## Overview
 
-This project explores whether it’s possible to predict Cambridge admission outcomes for professionals in data-related fields, using only information typically found on a LinkedIn profile. It examines how factors such as university background, time spent in data roles, and leadership experience influence the likelihood of receiving an offer.
+This project investigates how educational pedigree and professional experience shape career trajectories in data science, with a focus on distinguishing Cambridge alumni from their peers. Using only publicly available LinkedIn profile data and QS World University Rankings, it examines:
 
-This work is submitted as part of my MPhil in Data Intensive Science application.
+- **Institutional prestige:** How undergraduate university classification and QS rank correlate with later attendance at Cambridge.  
+- **Career timing:** How cumulative months in data roles and leadership positions influence the likelihood of pursuing an MPhil at Cambridge.  
+- **Skill profiles:** Which technical and interpersonal skills most differentiate Cambridge graduates from other data professionals.
 
-## Dataset
+This analysis supports my application to the MPhil in Data Intensive Science at the University of Cambridge by demonstrating my ability to design, implement, and interpret data-science workflows end-to-end.
 
-Source: 
+## Data Sources
 
-- LinkedIn: Modified publicly available code to scrape through LinkedIn profiles 
+- **LinkedIn profiles:** Scraped via a custom adaptation of the StaffSpy tool (see `src/LinkedIn scraping.ipynb`).  
+- **QS 2025 Rankings:** Publicly available global university rankings, matched to each profile’s listed institutions.
 
-- QS dataset: Publicly available data from the QS World University Rankings 2025 report
+## Key Features
 
-*Please navigate to the src folder and open 'LinkedIn scraping.ipynb' to learn more about the generation of the admissions dataset*
+- **Uni Class:** Categorical prestige tier (Oxbridge, Russell Group, Other)  
+- **2025 Rank:** Numeric QS university ranking  
+- **data_months:** Total months in data-related roles  
+- **leader_months:** Total months in leadership roles  
+- **Eight validated skills:** One-hot indicators for skills (e.g. SQL, Excel, Physics) shown to most strongly associate with Cambridge attendance  
 
-Features:
+## Target
 
-- Uni Class: Classification of undergraduate university
+- **Cambridge?** (1 = alumni, 0 = non-alumni)
 
-- 2025 Rank: QS world ranking of undergraduate university
+## Datasets
 
-- leader_months: Duration of leadership roles (in months)
+- **dup_df:** “Duplication” method splitting each profile into two rows (one per listed university) to maximize data diversity.  
+- **arb_df:** “Arbitrary” method selecting one university per profile for a more conservative, noise-reduced dataset.
 
-- data_months: Duration of data-related experience (in months)
+## Challenges
 
-Target:
+1. **Class imbalance:** Far fewer Cambridge alumni than non-alumni.  
+2. **Limited sample size:** Heightened risk of overfitting. 
+3. **Feature noise:** Inconsistencies and errors introduced by free-text LinkedIn fields (e.g. variable skill labels, missing dates) and by approximating QS rank bands (range midpoints and manual overrides).
+4. **Network sampling bias:** Because scraping was limited to my own LinkedIn connections, the dataset likely over-represents profiles similar to my background (e.g. STEM disciplines), which may skew the validated skills and model generalizability.
 
-- Cambridge?: Binary indicator (1 = admitted, 0 = not admitted)
+## Methodology
 
+1. **Train-test split** with a held-out 20% test set.  
+2. **SMOTE oversampling** inside 5-fold cross-validation to balance classes.  
+3. **Baseline & Ensemble models:**  
+   - Logistic Regression (interpretable baseline)  
+   - Random Forest & Extra Trees (bagged tree ensembles)  
+   - XGBoost (gradient boosted trees)  
+4. **Hyperparameter tuning** via `GridSearchCV` optimizing F1-score.  
+5. **Evaluation:** Accuracy, precision/recall/F1 (macro-averaged), ROC-AUC, and cross-validation scores.  
+6. **Interpretability:** SHAP summary plots to reveal feature impacts.
 
-Minor data cleaning and feature engineering were performed.
+## Results (Highlights)
 
-As a result of the nature of the Uni Class feature, two datasets were generated:
+### Duplication Dataset (dup_df) Results
 
-- dup_df: Original dataset containing duplicate university entries for some applicants.
+| Model               | Accuracy | ROC-AUC | Recall (on admits) | F1 (on admits) |
+| ------------------- | -------: | ------: | -----------------: | -------------: |
+| XGBoost             |   0.7569 |  0.7057 |               0.59 |           0.58 |
+| Random Forest       |   0.7514 |  0.6661 |               0.47 |           0.52 |
+| Logistic Regression |   0.6630 |  0.6105 |               0.49 |           0.45 |
+| Extra Trees         |   0.7569 |  0.6759 |               0.49 |           0.53 |
 
-- arb_df: A cleaned version where one entry per applicant was selected arbitrarily to avoid duplication bias.
+### Arbitrary Dataset (arb_df) Results
 
-## Key Challenges
-
-1. Class imbalance: Significantly more rejected applicants than admitted ones.
-
-2. Small dataset: Risk of overfitting without careful model handling.
-
-3. Potential feature noise: Features like QS rank may introduce variance.
-
-## Approach
-
-1. Data Splitting
-
-    - Hold-out test set reserved before any model fitting.
-    
-    - Training data further split via cross-validation.
-    
-2. Preprocessing
-
-    - Oversampling of the minority class (admitted) using SMOTE to balance classes.
-    
-    - SMOTE applied inside cross-validation folds to avoid data leakage.
-
-3. Baseline Modeling
-
-    - Logistic Regression: Chosen for interpretability and strong baseline benchmarking.
-
-4. Model Development
-
-    - Random Forest Classifier: Tuned using grid search.
-    
-    - Extra Trees Classifier: Explored to better handle small data and noisy features.
-
-5. Evaluation Metrics
-
-    - Accuracy
-    
-    - Precision, Recall, F1-score (macro-averaged)
-    
-    - Training vs. cross-validation performance (to monitor overfitting)
-
-### Why SMOTE?
-
-Chosen over simpler oversampling methods (e.g., random oversampling) because:
-
-- Generates synthetic examples rather than duplicating minority instances.
-
-- Reduces overfitting risk compared to random oversampling.
-
-- Better generalization on unseen data, especially critical with small datasets.
-
-## Results
-
-**On the primary dataset (dup_df):**
-
-|Metric | Random Forest | Extra Trees | Logistic regression |
-| --- | --- | --- | --- | 
-|Test Accuracy | 0.79 | 0.69 | 0.60 |
-|Minority Recall | 0.43 | 0.59 | 0.41 |
-|Macro F1-Score | 0.70 | 0.64 | 0.53 |
-
-- Random Forest performed best in terms of test accuracy (0.72) and minority recall (0.74), indicating a strong ability to classify both classes well without significant overfitting.
-
-- Logistic Regression achieved moderate performance but lagged behind in comparison to Random Forest and Extra Trees, especially in terms of minority recall (0.69) and F1-score.
-
-- Extra Trees showed slightly lower accuracy than Random Forest but still maintained a solid performance with a good balance across metrics. It slightly improved minority recall compared to Logistic Regression.
+| Model               | Accuracy | ROC-AUC | Recall (on admits) | F1 (on admits) |
+| ------------------- | -------: | ------: | -----------------: | -------------: |
+| XGBoost             |   0.6695 |  0.6678 |               0.65 |           0.64 |
+| Random Forest       |   0.6271 |  0.6198 |               0.56 |           0.57 |
+| Logistic Regression |   0.6610 |  0.6664 |               0.71 |           0.65 |
+| Extra Trees         |   0.6441 |  0.6390 |               0.60 |           0.60 |
 
 
-**On the secondary dataset (arb_df):**
+Across both dataset variants, our ensemble models achieved strong overall accuracy, but the story changes when we look closer:
 
-|Metric | Random Forest | Extra Trees | Logistic regression |
-| --- | --- | --- | --- |
-|Test Accuracy | 0.71 | 0.72 | 0.67 |
-|Minority Recall | 0.69 | 0.69 | 0.75 |
-|Macro F1-Score | 0.71 | 0.72 | 0.67 |
+- On the duplication set, XGBoost and Extra Trees tied for the highest accuracy (0.7569), indicating that simply bagging randomized trees can match gradient boosting when noise is amplified by duplicating profiles.
 
-- Extra Trees showed a small improvement in accuracy (0.72) over Random Forest (0.71) and logistic regression (0.67) but did not perform as well as Random Forest in minority recall.
+- On the arbitrary set, Logistic Regression led the way in admit‐class recall (0.71), suggesting that in a cleaner, less‐noisy dataset a linear decision boundary more effectively isolates Cambridge alumni.
 
-- Logistic Regression outperformed the other models in minority recall (0.75), but the overall accuracy and F1-score were lower compared to the ensemble models.
+- XGBoost’s performance shift—accuracy dropping but recall rising when moving from dup_df to arb_df—highlights how the choice of dataset shaping can drastically alter which model metrics look best, and thus which model you’d select depending on whether you prioritize catching all true admits or maximizing overall correctness.
 
-- The results from arb_df are considered more reliable due to reduced duplication bias, which likely led to more generalizable insights.
+### SHAP Analysis Results
 
-Results from arb_df are more reliable due to reduced duplication bias, which led to more generalisable insights.
+On closer analysis of our SHAP summary plots we learn:
 
-*Please navigate to the model outputs folder located within the src folder to learn more*
+- Prestige signals shift depending on dataset construction—categorical class dominates in the noisy duplication set, while fine-grained QS rank takes over once noise is reduced.
 
-## Tools Used
+- Length of data experience becomes a strong positive predictor only after reducing duplication bias, suggesting careful data curation can clarify true career–admissions relationships.
 
-- Python 3
- 
-- Jupyter Notebook
- 
-- scikit-learn (Logistic Regression, Random Forest, Extra Trees)
- 
-- imbalanced-learn (SMOTE)
- 
-- pandas, numpy (data manipulation)
- 
-- matplotlib, seaborn (visualizations)
- 
+- High SQL emphasis surprisingly decreases predicted Cambridge likelihood, hinting at a deeper career‐stage or skill‐focus distinction between research‐oriented applicants and seasoned industry specialists.
+
+> _Full tables, plots, and detailed outputs are in the `src/model_outputs/` and `results/` folders._
+
+
 ## Conclusion
 
-This project successfully explored the potential of predicting Cambridge admission outcomes for professionals in data-related fields, using only information typically found on a LinkedIn profile. By applying various machine learning models to small, imbalanced datasets, the approach effectively balanced class distribution through resampling techniques like SMOTE. Among the models tested, Extra Trees showed the best performance, improving both recall and F1 scores without overfitting.
-
-While the models demonstrate promising predictive power, the results also underscore the need for continued refinement, particularly in handling feature noise and enhancing model generalization. The findings suggest that, with further data and fine-tuning, such a model could offer valuable insights for admissions prediction in highly competitive fields like data science. This work provides a foundation for future research into scalable, transparent AI applications for educational outcomes.
+This work demonstrates a reproducible, end-to-end data-science pipeline—from web-scraped profiles to model interpretation—highlighting how institutional and career factors intersect in elite academic admissions. It lays the groundwork for richer feature exploration and application-specific threshold tuning, with potential for broader validation against real-world admissions data.
 
