@@ -3,3 +3,9 @@ numpy
 matplotlib
 scikit-learn
 imbalanced-learn
+shap
+os 
+rapidfuzz
+xgboost
+datetime
+ast
